@@ -10,3 +10,10 @@ numerical optimization
 
 每周六22.00前交作业，如果是比较后写完的记得提交一下...或者在群里艾特一下abc123456提交...只要我没睡着
 
+
+## Usage
+
+```shell
+cd code_week1
+jupyter-notebook
+```
