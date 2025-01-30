@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{upquote}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\newenvironment{statement}[2][Statement]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\usepackage{xcolor}
+
+
+
+
+\title{Handin 1}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+In this project we develop a testing protocol and performance metric for algorithms provided in common optimization toolboxes. The algorithm we test on includes the Ellipsoid function(f1), the Rosenbrock Banana Function(f2), the Log-Ellipsoid Function(f3), the Attractive-Sector Function(f4), and the Sum of Different Powers Function(f5). We focus on three different optimization algorithms, including the Broyden-Fletcher-Goldfarb-Shanno(BFGS), Newton-CG, and trust-region.
+
+Our metrics reflects the the four criteria for good algorithms. For \textbf{Robustness}, we develop test on different initial guesses and dims of the initial guesses. For \textbf{Accuracy} we record the precision when the optimizer reaches the tolerance rate. We also run with multiple initial guesses and calculate the running time in average, in order to prove the \textbf{Stability} and \textbf{Resource Efficiency}. % TODO cite NO notes 
+Also we plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual.
+
+%Outlines the report.
+%Contains information about contents, (research) questions and overall structure.
+
+\section{Theory}
+
+%Your Theoretical contributions.
+%Theoretical considerations that shape choices in the experimental section.
+Here we are going to introduce our theoretical considerations that shape the choices of initial guesses in the experimental section.
+
+We narrow down some theoretical convergence status of the given functions by calculating Gradient and Hessian, and find the minimiser using the second order sufficient conditions.
+
+The gradient of a function is a vector of its first-order partial derivatives. A point $x^*$ is a critical point if the gradient is zero, and the critical points are candidates for local minima points.
+
+\begin{equation}
+\nabla f(x^*) = 0
+\label{critical}
+\end{equation}
+
+The Hessian H(x) is a matrix of second-order partial derivatives of f(x). It provides information about the curvature of the function at a given point. It provides information about the curvature of the function at a given point.
+
+To determine if a critical point $x^*$ is a local minimizer, we mainly apply the Second Order Sufficient Conditions, which includes the the $H(x^*)$ is positive definite (all eigenvalues are positive), then $x^*$ is a strict local minimizer by equation~\ref{critical}.
+
+
+%The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0). % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+
+%The BFGS is a quasi-Newton method for unconstrained optimization, approximating the Hessian matrix to find a local minimum. It is gradient-based, so results depend on the initial guess and may converge to different local minima. % TODO reference
+
+
+
+\section{Experiments}
+
+%Description of the experiments performed.
+%Description of procedure and evaluation metrics.
+%Also includes choices of parameters
+
+We choose different values and dims of initial guess, alpha and optimizers to find the minimum value among the five functions. We record the average runtime of different initial guess(x0), error rate when reaching the tolerance point and success rate. The variables are listed in Table. % TODO add table  
+
+\section{Results and Discussion}
+
+For the various testing functions, we are going to discussion them separately in the following sections.
+
+\subsection{The Ellipsoid Function(f1)}
+
+\subsection{The Rosenbrock Banana Function(f2)}
+
+\subsection{The Log-Ellipsoid Function(f3))}
+
+\subsection{The Attractive-Sector Function(f4)}
+
+\subsection{The Sum of Different Powers Function(f5)}
+
+
+%Presentation of the outcome of the experiments.
+%Discussion of the results, including the knowledge gained from the theoretical questions.
+%Also contains discussion of experimental shortcomings.
+
+\section{Conclusion}
+
+%What knowledge have we gained?
+%Could we answer the question we set out to answer in the Introduction?
+
+
+\end{document}
