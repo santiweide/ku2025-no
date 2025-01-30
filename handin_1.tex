@@ -8,7 +8,7 @@
 \newenvironment{statement}[2][Statement]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \usepackage{xcolor}
-
+\usepackage{booktabs}
 
 
 
@@ -22,7 +22,7 @@
 In this project we develop a testing protocol and performance metric for algorithms provided in common optimization toolboxes. The algorithm we test on includes the Ellipsoid function(f1), the Rosenbrock Banana Function(f2), the Log-Ellipsoid Function(f3), the Attractive-Sector Function(f4), and the Sum of Different Powers Function(f5). We focus on three different optimization algorithms, including the Broyden-Fletcher-Goldfarb-Shanno(BFGS), Newton-CG, and trust-region.
 
 Our metrics reflects the the four criteria for good algorithms. For \textbf{Robustness}, we develop test on different initial guesses and dims of the initial guesses. For \textbf{Accuracy} we record the precision when the optimizer reaches the tolerance rate. We also run with multiple initial guesses and calculate the running time in average, in order to prove the \textbf{Stability} and \textbf{Resource Efficiency}. % TODO cite NO notes 
-Also we plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual.
+Also we plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. 
 
 %Outlines the report.
 %Contains information about contents, (research) questions and overall structure.
@@ -60,6 +60,24 @@ To determine if a critical point $x^*$ is a local minimizer, we mainly apply the
 %Also includes choices of parameters
 
 We choose different values and dims of initial guess, alpha and optimizers to find the minimum value among the five functions. We record the average runtime of different initial guess(x0), error rate when reaching the tolerance point and success rate. The variables are listed in Table. % TODO add table  
+
+\begin{table}[h!]
+\label{table:rule}
+\centering
+\begin{tabular}{cc}
+\toprule
+ \textbf{Item} & \textbf{Value} \\ 
+\midrule
+\textbf{Sample Num} & 5 \\
+\textbf{Dim} & 2,5,10 \\
+\textbf{Alpha(in f1)} & 10,100,1000 \\
+\textbf{Distribution} & Normal with random seed = 42 \\
+\bottomrule
+\end{tabular}
+\caption{Variants for initial guesses}
+\end{table}
+
+We plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. The log scale is applied to reveal the difference when the values of different optimizer functions got closer on a very small scale.
 
 \section{Results and Discussion}
 
