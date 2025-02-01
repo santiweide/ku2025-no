@@ -81,7 +81,9 @@ We choose different values and dims of initial guess, alpha and optimizers to fi
 \caption{Variants for experiment setups; x0 means the initial guess}
 \end{table}
 
-We plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. The log scale is applied to reveal the difference when the values of different optimizer functions got closer on a very small scale.
+We plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. The log scale is applied to reveal the difference when the values of different optimizer functions got closer on a very small scale. 
+
+The initial guess choice could be a \textbf{limitation} of our test protocol, so we try to include more tries, too.
 
 \section{Results and Discussion}
 
@@ -125,7 +127,7 @@ Newton-CG and Trust-Region outperforms BFGS on the number of evaluation iteratio
 Trust-Region achieved the fastest runtime (0.001253s), followed by Newton-CG (0.002091s) and BFGS (0.002473s). 
 
 \textbf{Precision}
-BFGS attained the smallest distance to the optimum (2.71e-20), and both Newton-CG and Trust-Region reached comparable solutions with a slightly larger final distance ($\approx2.22e-16$).
+BFGS attained the smallest distance to the optimum, and both Newton-CG and Trust-Region reached comparable solutions with a slightly larger final distance.
 
 \begin{table}[h]
     \centering
@@ -155,13 +157,13 @@ We also explore the different dims and alpha value and their influence on the sp
 As shown in Figure~\ref{fig:f2}, for the fixed initial point $x_0=(-1.2,1.0)$, all three algorithms successfully converged to the optimal solution, with final gradient norms close to (1e-15). Trust-Region exhibited the best efficiency in both runtime and function evaluations, while BFGS achieved the highest precision.  According to Table~\ref{tab:f2}, we have the following discussion:
 
 \textbf{Evaluation Iterations}  
-Trust-Region required the fewest function evaluations ($27$), outperforming BFGS ($41$) and Newton-CG ($107$). This suggests that second-order methods generally adapted more efficiently to the problem’s curvature, but Newton-CG struggled due to the function's high condition number of its Hessian matrix.
+Trust-Region required the fewest function evaluations, outperforming BFGS and Newton-CG (27 vs 41 vs 107). This suggests that second-order methods generally adapted more efficiently to the problem’s curvature, but Newton-CG struggled due to the function's high condition number of its Hessian matrix.
 
 \textbf{Runtime}  
-Trust-Region achieved the fastest runtime ($0.004087s$), followed by BFGS ($0.007580s$) and Newton-CG ($0.009386s$), further confirming its efficiency.  
+Trust-Region achieved the fastest runtime, followed by BFGS and Newton-CG.  
 
 \textbf{Precision}  
-Trust-Region reached the exact optimum with zero error. BFGS achieved a final distance of $(1.23e-12)$, while Newton-CG had a slightly larger error of $(8.12e-10)$, indicating slower convergence to high precision.
+Trust-Region reached the exact optimum with zero error. BFGS achieved a final distance of $(1.23e-12)$, while Newton-CG had a slightly larger error of $(8.12e-10)$. It indicates that slower convergence may achieve high precision.
 
 \begin{table}[h]
     \centering
