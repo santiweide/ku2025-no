@@ -117,17 +117,12 @@ For the various testing functions, we are going to discussion them separately in
 
 \subsection{The Ellipsoid Function(f1)}
 
-\subsubsection{Speed and Accuarcy}
+%\subsubsection{Speed and Accuarcy}
 As issued in Figure~\ref{fig:f1}, for the fixed initial guessing point $x_0=(-1.2,1.0)$, both the three algorithms succeed in converging the optimal solution, with final gradient norm $\approx1e-15$. Trust-Region demonstrated the best efficiency in both runtime and function evaluations, while BFGS achieved the highest precision. According to the testing protocol, our test result is in Table~\ref{tab:f1}, and our discussion is as follow.
 
 \textbf{Evaluation Iterations} 
 Newton-CG and Trust-Region outperforms BFGS on the number of evaluation iterations takes to convergence, with 3 against 6. This suggests that second-order methods (Newton and trust-region) adapted more efficiently to the problem’s curvature than the quasi-Newton approach (BFGS).
-
-\textbf{Runtime}
-Trust-Region achieved the fastest runtime (0.001253s), followed by Newton-CG (0.002091s) and BFGS (0.002473s). 
-
-\textbf{Precision}
-BFGS attained the smallest distance to the optimum, and both Newton-CG and Trust-Region reached comparable solutions with a slightly larger final distance.
+ 
 
 \begin{table}[h]
     \centering
@@ -148,22 +143,19 @@ BFGS attained the smallest distance to the optimum, and both Newton-CG and Trust
     \label{tab:f1}
 \end{table}
 
-\subsubsection{Different Initial Guesses and Optimizer Choices}
+%\subsubsection{Different Initial Guesses and Optimizer Choices}
 We also explore the different dims and alpha value and their influence on the speed of convergence, measured by iterations. For all the three optimizers running on f1, the higher the dim is, the larger the iterations takes to reach tolerance will be. The Trust-Region has a relevant small iteration number, even if the alpha is larger(as 1000).
 
 
 \subsection{The Rosenbrock Banana Function(f2)}
 
-As shown in Figure~\ref{fig:f2}, for the fixed initial point $x_0=(-1.2,1.0)$, all three algorithms successfully converged to the optimal solution, with final gradient norms close to (1e-15). Trust-Region exhibited the best efficiency in both runtime and function evaluations, while BFGS achieved the highest precision.  According to Table~\ref{tab:f2}, we have the following discussion:
+As shown in Figure~\ref{fig:f2}, for the fixed initial point $x_0=(-1.2,1.0)$, all three algorithms successfully converged to the optimal solution, with final gradient norms close to (1e-15). The relevant result is in Table~\ref{tab:f2}.
 
 \textbf{Evaluation Iterations}  
-Trust-Region required the fewest function evaluations, outperforming BFGS and Newton-CG (27 vs 41 vs 107). This suggests that second-order methods generally adapted more efficiently to the problem’s curvature, but Newton-CG struggled due to the function's high condition number of its Hessian matrix.
+Trust-Region required the fewest function evaluations, outperforming BFGS and Newton-CG (27 vs 41 vs 107). This suggests that second-order methods generally adapted more efficiently to the problem’s curvature, but Newton-CG struggled due to the function's high condition number of its Hessian matrix. Also, if the dimension of $x0$ become larger, more iterations will be taken by Newton-CG to reach tolerance.
 
-\textbf{Runtime}  
-Trust-Region achieved the fastest runtime, followed by BFGS and Newton-CG.  
-
-\textbf{Precision}  
-Trust-Region reached the exact optimum with zero error. BFGS achieved a final distance of $(1.23e-12)$, while Newton-CG had a slightly larger error of $(8.12e-10)$. It indicates that slower convergence may achieve high precision.
+%\textbf{Runtime}  
+%Trust-Region achieved the fastest runtime, followed by BFGS and Newton-CG.  
 
 \begin{table}[h]
     \centering
