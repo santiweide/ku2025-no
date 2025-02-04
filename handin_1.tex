@@ -33,9 +33,10 @@ Also we plot the convergence process with the 2-norm distance in log scale to se
 
 %Your Theoretical contributions.
 %Theoretical considerations that shape choices in the experimental section.
-Here we are going to introduce our theoretical considerations that shape the choices of initial guesses in the experimental section.
+%considerations that shape the choices of initial guesses in the experimental section.
+% For gradient-based methods (e.g., BFGS, Newton), we want to choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, we want to ensure the Hessian is positive definite at the initial point. 
 
-We narrow down some theoretical convergence status of the given functions by calculating Gradient and Hessian, and find the minimiser using the second order sufficient conditions.
+Here we are going to introduce our theoretical background for the optimize algorithm, which will help us understand the experiment results. We narrow down some theoretical convergence status of the given functions by calculating Gradient and Hessian, and find the minimizer using the second order sufficient conditions. 
 
 The gradient of a function is a vector of its first-order partial derivatives. A point $x^*$ is a critical point if the gradient is zero, and the critical points are candidates for local minima points.
 
@@ -188,6 +189,8 @@ Trust-Region required the fewest function evaluations, outperforming BFGS and Ne
 %Also contains discussion of experimental shortcomings.
 
 \section{Conclusion}
+
+We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, that is, BFGS and Newton-GC, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
 
 %What knowledge have we gained?
 %Could we answer the question we set out to answer in the Introduction?

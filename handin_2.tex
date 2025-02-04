@@ -19,10 +19,33 @@
 
 \section{Introduction}
 
+We investigate the implementation and benchmarking of the Steepest Descent and Newton's Method, both using backtracking line search. We aim to analyze their convergence behavior and compare their efficiency.  We also solve theoretical problems that provide insights into the algorithmic choices and expected performance.
+
+
 %Outlines the report.
 %Contains information about contents, (research) questions and overall structure.
 
 \section{Theory}
+
+\subsection{Stopping Criteria}
+% Explanation of stopping criteria and justification for their choice
+Stopping criteria such as gradient norm, function value difference, and step size are discussed. Threshold values and their impact on convergence are analyzed.
+
+\subsection{Backtracking Line Search Parameter Selection}
+% Discussion on parameter choices for line search
+Parameters such as initial step size, shrinkage factor, and Armijo condition constant are considered. Sensitivity analysis of these choices is performed.
+
+\subsection{Convergence Analysis}
+% Theoretical background on Q-linear, Q-superlinear, and Q-quadratic convergence
+We analyze convergence rates of both algorithms and establish theoretical expectations for different types of functions.
+
+\subsection{Theoretical Problem 1: Sum of Different Powers Function}
+% Derivation of Newton step and convergence properties
+Explicit computation of the Newton step direction at a given point and proof that Newton’s Method exhibits Q-linear but not Q-superlinear convergence.
+
+\subsection{Theoretical Problem 2: Sufficient Decrease Condition in 1D}
+% Proof for sufficient decrease condition in polynomial functions
+We prove the sufficient decrease condition for functions of the form $f(x) = ax^m$, demonstrating dependence on parameter $m$ and visualizing the condition.
 
 %Your Theoretical contributions.
 %Theoretical considerations that shape choices in the experimental section.
@@ -30,12 +53,40 @@
 
 \section{Experiments}
 
+\subsection{Experimental Setup}
+% Description of implementation details
+Implementation details of Steepest Descent and Newton's Method, including data structures and numerical considerations.
+
+\subsection{Benchmarking Protocol}
+% Explanation of benchmarking methodology
+Selection of test functions, choice of initial conditions, and performance evaluation metrics such as iteration count and function evaluations.
+
+\subsection{Experimental Parameter Choices}
+% Justification for experimental parameter settings
+Discussion on how stopping thresholds and backtracking line search parameters were set for experiments.
+
 %Description of the experiments performed.
 %Description of procedure and evaluation metrics.
 %Also includes choices of parameters
 
 
 \section{Results and Discussion}
+
+\subsection{Correctness Verification}
+% How we verified that the implementations are correct
+Comparison with analytical gradients, function evaluations, and expected convergence patterns.
+
+\subsection{Step Length Observations}
+% Empirical analysis of chosen step lengths
+Visualization and discussion of step length variation across iterations for both methods.
+
+\subsection{Convergence Plots and Analysis}
+% Presentation of empirical convergence rates
+Comparison of Q-linear, Q-superlinear, and Q-quadratic convergence for different test functions.
+
+\subsection{Sensitivity to Line Search Parameters}
+% Analysis of the impact of parameter choices
+Discussion of how different backtracking parameters influence convergence speed and stability.
 
 %Presentation of the outcome of the experiments.
 %Discussion of the results, including the knowledge gained from the theoretical questions.
