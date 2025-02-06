@@ -10,6 +10,36 @@
 \usepackage{xcolor}
 
 
+% Listings package for code rendering (No external dependencies)
+\usepackage{listings}  
+\usepackage{xcolor}   % Color support
+\usepackage{tcolorbox} % Box for better appearance
+
+% Define custom colors for code highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+\lstset{frame=tb,
+    language=Python,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    keepspaces=true,                 
+    numbers=left,       
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+}
 
 
 \title{Handin 2}
@@ -21,81 +51,68 @@
 
 We investigate the implementation and benchmarking of the Steepest Descent and Newton's Method, both using backtracking line search. We aim to analyze their convergence behavior and compare their efficiency.  We also solve theoretical problems that provide insights into the algorithmic choices and expected performance.
 
-
-%Outlines the report.
-%Contains information about contents, (research) questions and overall structure.
-
-\section{Theory}
-
-\subsection{Stopping Criteria}
-% Explanation of stopping criteria and justification for their choice
-Stopping criteria such as gradient norm, function value difference, and step size are discussed. Threshold values and their impact on convergence are analyzed.
-
-\subsection{Backtracking Line Search Parameter Selection}
-% Discussion on parameter choices for line search
-Parameters such as initial step size, shrinkage factor, and Armijo condition constant are considered. Sensitivity analysis of these choices is performed.
-
-\subsection{Convergence Analysis}
-% Theoretical background on Q-linear, Q-superlinear, and Q-quadratic convergence
-We analyze convergence rates of both algorithms and establish theoretical expectations for different types of functions.
-
-\subsection{Theoretical Problem 1: Sum of Different Powers Function}
-% Derivation of Newton step and convergence properties
-Explicit computation of the Newton step direction at a given point and proof that Newton’s Method exhibits Q-linear but not Q-superlinear convergence.
-
-\subsection{Theoretical Problem 2: Sufficient Decrease Condition in 1D}
-% Proof for sufficient decrease condition in polynomial functions
-We prove the sufficient decrease condition for functions of the form $f(x) = ax^m$, demonstrating dependence on parameter $m$ and visualizing the condition.
-
-%Your Theoretical contributions.
-%Theoretical considerations that shape choices in the experimental section.
-
-
 \section{Experiments}
 
-\subsection{Experimental Setup}
-% Description of implementation details
-Implementation details of Steepest Descent and Newton's Method, including data structures and numerical considerations.
+\subsection{Experimental Setup: Stopping Criteria}
+% Discuss what stopping criteria you use and why? How do you pick the values for the stopping thresholds?
+We apply two kinds of stopping criteria, including the gradient norm threshold and the maximum iteration threshold. We use the gradient norm threshold to ensure the algorithm stops when the gradient is sufficiently small. We use the max iteration to limit the algorithm to run infinitely when there is ill conditions, in case the algorithm would run definitely.
 
-\subsection{Benchmarking Protocol}
-% Explanation of benchmarking methodology
-Selection of test functions, choice of initial conditions, and performance evaluation metrics such as iteration count and function evaluations.
+\begin{lstlisting}
+# Max Iteration Number
+for _ in range(max_iter): 
+    grad = grad_f(x)
+    # Gradient Norm Threshold 
+    if np.linalg.norm(grad) < tol:
+        break
+\end{lstlisting}
 
-\subsection{Experimental Parameter Choices}
-% Justification for experimental parameter settings
-Discussion on how stopping thresholds and backtracking line search parameters were set for experiments.
+\textbf{Value Choice: }We choose the tolerance gradient value=1e-6 because it is small enough and will not cost too much iterations. We choose max iterations=1000, because the gradient norm threshold will reach firstly in our experiment, so the max iterations will not effect the gradient norm threshold. 
 
-%Description of the experiments performed.
-%Description of procedure and evaluation metrics.
-%Also includes choices of parameters
+\subsection{Parameter Selection in Backtracking Line Search }
+% How do you select parameter values for the backtracking line search? Is your result sensitive towards these settings?
+
+As the Armijo issues: 
+
+\begin{equation}
+f(x_k + \alpha d_k) \leq f(x_k) + c_1 \alpha \nabla f(x_k)^T d_k
+\end{equation}
+
+We set initial step(alpha) as 1.0 in Newton's, because the quadratic model assumption often suggests a full step is reasonable. We set it 0.1 in Steepest Descent, using a smaller initial value to avoid overshooting.
+
+We set the step shrink ratio ($\rho$) is 0.5. This param controls how aggressively the step size is reduced. The smaller it is, the faster the algorithm will shrink, while wasting evaluations.  Take rho=0.5 and rho=0.8 as an example, the step to reach the same step length $\alpha$ is:
+\begin{equation}
+\begin{aligned}
+k_{0.5}&=log_{\rho}(\alpha / \alpha_0) = \frac{ln((\alpha / \alpha_0)}{ln(0.5)} \\
+k_{0.8}&=\frac{ln((\alpha / \alpha_0)}{ln(0.8)} 
+\end{aligned}
+\end{equation}
+Since $|ln(0.5)| > |ln(0.8)|$, so the smaller the $\rho$ is, the less steps the algorithm will take. 
+
+We also have the Wolfe condition param, Sufficient Decrease Parameter(c1), set default by 1e-4. This parameter ensures the step produces a meaningful function decrease, and the smaller the value is, the more permissive the condition is.
 
 
 \section{Results and Discussion}
 
 \subsection{Correctness Verification}
-% How we verified that the implementations are correct
-Comparison with analytical gradients, function evaluations, and expected convergence patterns.
+% Evaluate whether your results are correct. Describe the steps you took to ensure correctness of your algorithms and show data that supports your claims.
 
 \subsection{Step Length Observations}
-% Empirical analysis of chosen step lengths
-Visualization and discussion of step length variation across iterations for both methods.
+% For both algorithms, describe your observations of the chosen steplengths. Are there important differences between the functions and algorithms?
 
 \subsection{Convergence Plots and Analysis}
-% Presentation of empirical convergence rates
-Comparison of Q-linear, Q-superlinear, and Q-quadratic convergence for different test functions.
+% Show convergence plots and based on the empirical results, state whether the algorithms likely have Q-linear, Q-superlinear or maybe even Q-quadratic convergence on the different functions.
 
-\subsection{Sensitivity to Line Search Parameters}
-% Analysis of the impact of parameter choices
-Discussion of how different backtracking parameters influence convergence speed and stability.
 
-%Presentation of the outcome of the experiments.
-%Discussion of the results, including the knowledge gained from the theoretical questions.
-%Also contains discussion of experimental shortcomings.
+\section{Theory}
+
+\subsection{Question 1: Sum of Different Powers Function}
+% Derivation of Newton step and convergence properties
+
+\subsection{Question 2: Sufficient Decrease Condition in 1D}
+% Proof for sufficient decrease condition in polynomial functions
+
 
 \section{Conclusion}
-
-%What knowledge have we gained?
-5Could we answer the question we set out to answer in the Introduction?
 
 
 \end{document}
