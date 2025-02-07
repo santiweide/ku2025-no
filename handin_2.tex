@@ -7,7 +7,8 @@
 \usepackage{listings}
 \newenvironment{statement}[2][Statement]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
 
 
 % Listings package for code rendering (No external dependencies)
@@ -49,7 +50,9 @@
 
 \section{Introduction}
 
-We investigate the implementation and benchmarking of the Steepest Descent and Newton's Method, both using backtracking line search. We aim to analyze their convergence behavior and compare their efficiency.  We also solve theoretical problems that provide insights into the algorithmic choices and expected performance.
+We investigate the implementation and benchmarking of the Steepest Descent and Newton's Method, both using backtracking line search. We aim to analyze their convergence behavior and compare their efficiency.  We also solve theoretical problems that provide insights into the algorithmic choices and expected performance. 
+
+In our benchmark protocol, we focus on the five functions provided in the case study. 
 
 \section{Experiments}
 
@@ -77,31 +80,20 @@ As the Armijo issues:
 f(x_k + \alpha d_k) \leq f(x_k) + c_1 \alpha \nabla f(x_k)^T d_k
 \end{equation}
 
-We set initial step(alpha) as 1.0 in Newton's, because the quadratic model assumption often suggests a full step is reasonable. We set it 0.1 in Steepest Descent, using a smaller initial value to avoid overshooting.
-
-We set the step shrink ratio ($\rho$) is 0.5. This param controls how aggressively the step size is reduced. The smaller it is, the faster the algorithm will shrink, while wasting evaluations.  Take rho=0.5 and rho=0.8 as an example, the step to reach the same step length $\alpha$ is:
-\begin{equation}
-\begin{aligned}
-k_{0.5}&=log_{\rho}(\alpha / \alpha_0) = \frac{ln((\alpha / \alpha_0)}{ln(0.5)} \\
-k_{0.8}&=\frac{ln((\alpha / \alpha_0)}{ln(0.8)} 
-\end{aligned}
-\end{equation}
-Since $|ln(0.5)| > |ln(0.8)|$, so the smaller the $\rho$ is, the less steps the algorithm will take. 
-
-We also have the Wolfe condition param, Sufficient Decrease Parameter(c1), set default by 1e-4. This parameter ensures the step produces a meaningful function decrease, and the smaller the value is, the more permissive the condition is.
 
 
 \section{Results and Discussion}
+
+Our benchmark protocol cover the following three features: (1) Different initial conditions(different $x_0$), (2) Different dimention of target functions, here we have high dimension quadratic function and 2-dimension quadratic function, and (3) Different backtracking Parameters.
 
 \subsection{Correctness Verification}
 % Evaluate whether your results are correct. Describe the steps you took to ensure correctness of your algorithms and show data that supports your claims.
 
 \subsection{Step Length Observations}
-% For both algorithms, describe your observations of the chosen steplengths. Are there important differences between the functions and algorithms?
+% For both algorithms, describe your observations of the chosen step lengths. Are there important differences between the functions and algorithms?
 
 \subsection{Convergence Plots and Analysis}
 % Show convergence plots and based on the empirical results, state whether the algorithms likely have Q-linear, Q-superlinear or maybe even Q-quadratic convergence on the different functions.
-
 
 \section{Theory}
 
