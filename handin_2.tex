@@ -74,35 +74,52 @@ for _ in range(max_iter):
 \subsection{Parameter Selection in Backtracking Line Search }
 % How do you select parameter values for the backtracking line search? Is your result sensitive towards these settings?
 
-As the Armijo issues: 
+As the Armijo issues, there are two selectable variables: The initial step size $\alpha$, the sufficient decrease parameter $c_1$, and the step shrinking factor$\rho$. 
 
 \begin{equation}
-f(x_k + \alpha d_k) \leq f(x_k) + c_1 \alpha \nabla f(x_k)^T d_k
+\begin{aligned}
+if \, & f(x_k + \alpha d_k) \leq f(x_k) + c_1 \alpha \nabla f(x_k)^T d_k:\\
+& \alpha = \rho * \alpha
+\end{aligned}
 \end{equation}
 
+Our initial setting for the three parameters is based on multiple tests of different values. % TODO
 
+Sensitivity: % TODO
 
 \section{Results and Discussion}
 
-Our benchmark protocol cover the following three features: (1) Different initial conditions(different $x_0$), (2) Different dimention of target functions, here we have high dimension quadratic function and 2-dimension quadratic function, and (3) Different backtracking Parameters.
+Our benchmark protocol cover the following three features: \\
+
+(1) Different target functions, particularly the functions provided in the case\_study.py
+(2) Different initial conditions(different $x_0$)\\
+(3) Different backtracking step lengths(rho).\\ 
+
 
 \subsection{Correctness Verification}
 % Evaluate whether your results are correct. Describe the steps you took to ensure correctness of your algorithms and show data that supports your claims.
 
+% TODO analysis f2 only
+
 \subsection{Step Length Observations}
 % For both algorithms, describe your observations of the chosen step lengths. Are there important differences between the functions and algorithms?
+
+% TODO analysis f2 in detail only
+
+Newton is not sensitive to the $\rho$ change.  % TODO reasoning
 
 \subsection{Convergence Plots and Analysis}
 % Show convergence plots and based on the empirical results, state whether the algorithms likely have Q-linear, Q-superlinear or maybe even Q-quadratic convergence on the different functions.
 
+
+
 \section{Theory}
 
 \subsection{Question 1: Sum of Different Powers Function}
-% Derivation of Newton step and convergence properties
+% TODO jiayi
 
 \subsection{Question 2: Sufficient Decrease Condition in 1D}
-% Proof for sufficient decrease condition in polynomial functions
-
+% TODO wendong
 
 \section{Conclusion}
 
