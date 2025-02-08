@@ -9,6 +9,7 @@
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{subfigure}
 
 
 % Listings package for code rendering (No external dependencies)
@@ -69,12 +70,11 @@ for _ in range(max_iter):
         break
 \end{lstlisting}
 
-\textbf{Value Choice: }We choose the tolerance gradient value=1e-6 because it is small enough and will not cost too much iterations. We choose max iterations=1000, because the gradient norm threshold will reach firstly in our experiment, so the max iterations will not effect the gradient norm threshold. 
+\textbf{Stopping Threshold Value Choice: }We choose the tolerance gradient value=1e-6 because it is small enough and will not cost too much iterations. We choose max iterations=1000, because the gradient norm threshold will reach firstly in our experiment, so the max iterations will not effect the gradient norm threshold. 
 
-\subsection{Parameter Selection in Backtracking Line Search }
+\subsection{Experimental Setup: Parameter Selection }
 % How do you select parameter values for the backtracking line search? Is your result sensitive towards these settings?
-
-As the Armijo issues, there are two selectable variables: The initial step size $\alpha$, the sufficient decrease parameter $c_1$, and the step shrinking factor$\rho$. 
+Here we discuss our parameter selections and their logic in Backtracking Line Search. As the Armijo issues:
 
 \begin{equation}
 \begin{aligned}
@@ -83,34 +83,93 @@ if \, & f(x_k + \alpha d_k) \leq f(x_k) + c_1 \alpha \nabla f(x_k)^T d_k:\\
 \end{aligned}
 \end{equation}
 
-Our initial setting for the three parameters is based on multiple tests of different values. % TODO
+There are 3 selectable variables in Backtracking Line Search, as listed below. The initial searching point $x_0$ also matters, but we will not discuss much since we have done this in hand-in1. So we directly use the selection of $x_0$ from hand-in1's conclusion.
 
-Sensitivity: % TODO
+\begin{enumerate}
+  \item The initial step size $\alpha_0$: we unify $\alpha_0$ to 1.0.
+  \item The sufficient decrease parameter $c_1$: we unify $c_1$ to $1e-4$.
+  \item The step shrinking factor$\rho$: we select different $\rho$, from ${0.1,0.3,0.5,0.9}$.
+\end{enumerate}
+
+\subsubsection{Selection of $\alpha_0$}
+We consider the $\alpha_0$ choice based on the different step scales in Newton's and Steepest Decent algorithm.
+
+For Newton's method, since Hessian is considered in the step direction, it can choose a naturally satisfying-Armijo-condition step when the Hessian is well-conditioned. The function decrease is typically large enough that $\alpha_0=1.0$ satisfies the Armijo condition without backtracking. When the Hessian is ill-conditioned, backtracking is required, and $\alpha$ wii reduce.
+
+For Steepest Decent, the search direction does not consider the second-order information, so the step size is often poorly scaled. A full step like $\alpha_0=1.0$ may fail to satisfy the Armijo condition. But it just lead to a few more back tracking, so for convenience we just unify the $\alpha_0=1.0$ in our benchmark protocol.
+
+\subsubsection{Selection of $c_1$}
+
+The parameter $c_1$ controls how much decrease is required in $f(x)$ per step. A smaller $c_1$  would require a more significant decrease, leading to excessive shrinking of $\alpha$ and slower convergence. A larger $c_1$ would accept even small improvements and might allow larger steps, but this could lead to instability.
+
+For Newton's Method, the step is well-scaled when the Hessian is well-conditioned, and the Armijo condition is often easily satisfied. So Newton's Method is less sensitive to $c_1$.
+
+For Steepest Descent, it is sensitive to $c_1$'s choice. Because its gradient steps are poorly scaled, so $c_1$ cannot be too large. $1e-4$ is a common choice among the standard library, for example, in scipy.optimization.line\_search. 
+
+Since the two algorithms could reach a common need for $c_1$, we just unify the $c_1$ in the benchmark protocol to $1e-4$.
+
+\subsubsection{Selection of $\rho$}
+
+For Newton's Method, backtracking is rarely needed when the Hessian is well-conditioned, and when backtracking is required, a larger $\rho$ is preferred because Newton's step is often in the right direction, and only small adjustment is needed.
+
+For Steepest Descent, since it often produces steps that violate the Armijo condition, backtracking is frequently needed. A larger $\rho$ makes the step size shrink slowly, leading to more backtracking iterations. So a smaller $\rho$ is preferred, so that the $\alpha$ could shrink quickly.
+
+Since the two algorithms have different preference to $rho$, and both of them are somehow sensitive to the $\rho$, our benchmark protocols covers different $\rho$. 
 
 \section{Results and Discussion}
 
-Our benchmark protocol cover the following three features: \\
+Our benchmark protocol cover the following two features: 
 
-(1) Different target functions, particularly the functions provided in the case\_study.py
-(2) Different initial conditions(different $x_0$)\\
-(3) Different backtracking step lengths(rho).\\ 
-
+\begin{enumerate}
+  \item Different target functions, particularly the functions provided in the case\_study.py;
+  \item Different backtracking step lengths($\rho$).
+\end{enumerate}
 
 \subsection{Correctness Verification}
 % Evaluate whether your results are correct. Describe the steps you took to ensure correctness of your algorithms and show data that supports your claims.
 
-% TODO analysis f2 only
-
 \subsection{Step Length Observations}
 % For both algorithms, describe your observations of the chosen step lengths. Are there important differences between the functions and algorithms?
 
-% TODO analysis f2 in detail only
 
 Newton is not sensitive to the $\rho$ change.  % TODO reasoning
 
 \subsection{Convergence Plots and Analysis}
 % Show convergence plots and based on the empirical results, state whether the algorithms likely have Q-linear, Q-superlinear or maybe even Q-quadratic convergence on the different functions.
 
+The convergence plots is shown in Figure~\ref{fig:convgraph}. 
+
+For f1, Newton's method vertically reaches optimum in 1 iteration, and it shows a Q-quadratic convergence. Steepest Descent  shows a slower convergence and it is a Q-Linear convergence.
+
+For f2, under Newton’s Method it is Q-quadratic convergence near the optimum, because it rapidly drop to zero after a few iterations. Under Steepest Descent, there is a slow, oscillatory decay, so it is Q-linear convergence.
+
+
+
+\begin{figure}[ht]
+\centering
+\subfigure[]{
+    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f1}
+\label{fig:f1}
+}
+\subfigure[]{
+    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f2}
+    \label{fig:f2}
+}
+\subfigure[]{
+    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f3}
+    \label{fig:f3}
+}
+\subfigure[]{
+    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f4}
+    \label{fig:f4}
+}
+\subfigure[]{
+    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f5}
+    \label{fig:f5}
+}
+\caption[]{Convergence graph(log scale) of the three optimize algorithms on the five functions, analyzing iterations}
+\label{fig:convgraph}
+\end{figure}
 
 
 \section{Theory}
