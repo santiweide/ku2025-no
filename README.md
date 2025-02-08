@@ -12,8 +12,9 @@ numerical optimization
 
 
 ## Usage
-
+Submit code: 
 ```shell
-cd code_week1
+git clone ${url}
+cd code
 jupyter-notebook
 ```
