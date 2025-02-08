@@ -55,9 +55,9 @@ We investigate the implementation and benchmarking of the Steepest Descent and N
 
 In our benchmark protocol, we focus on the five functions provided in the case study. 
 
-\section{Experiments}
+\section{Experiments Setup}
 
-\subsection{Experimental Setup: Stopping Criteria}
+\subsection{Stopping Criteria}
 % Discuss what stopping criteria you use and why? How do you pick the values for the stopping thresholds?
 We apply two kinds of stopping criteria, including the gradient norm threshold and the maximum iteration threshold. We use the gradient norm threshold to ensure the algorithm stops when the gradient is sufficiently small. We use the max iteration to limit the algorithm to run infinitely when there is ill conditions, in case the algorithm would run definitely.
 
@@ -70,9 +70,9 @@ for _ in range(max_iter):
         break
 \end{lstlisting}
 
-\textbf{Stopping Threshold Value Choice: }We choose the tolerance gradient value=1e-6 because it is small enough and will not cost too much iterations. We choose max iterations=1000, because the gradient norm threshold will reach firstly in our experiment, so the max iterations will not effect the gradient norm threshold. 
+\textbf{Stopping Threshold Value Choice: }We choose the tolerance gradient value=1e-6 because it is small enough and will not cost too much iterations. We choose max iterations=10, because the gradient norm threshold will reach firstly in our experiment, so the max iterations will not effect the gradient norm threshold. 
 
-\subsection{Experimental Setup: Parameter Selection }
+\subsection{Parameter Selection }
 % How do you select parameter values for the backtracking line search? Is your result sensitive towards these settings?
 Here we discuss our parameter selections and their logic in Backtracking Line Search. As the Armijo issues:
 
@@ -128,11 +128,22 @@ Our benchmark protocol cover the following two features:
 \subsection{Correctness Verification}
 % Evaluate whether your results are correct. Describe the steps you took to ensure correctness of your algorithms and show data that supports your claims.
 
+\textbf{Step1} We print logs to see the Hessian and gradient calculation during the iterations, so that we can see whether the Hessian is ill-condition(near singular) or not.
+
+\textbf{Step2} We also have numerical methods to prove the correctness, printed in the log. These include the convergence rate, step sizes and final error. 
+
+
 \subsection{Step Length Observations}
 % For both algorithms, describe your observations of the chosen step lengths. Are there important differences between the functions and algorithms?
+Newton is not sensitive to the chosen step lengths when the Hessian is well-conditioned and in this case all step length choices behaves the same(see $f_1$, $f_3$, $f_4$, $f_5$). When Hessian is ill-conditioned, backtracking is needed, and different $\rho$ leads a slight different behavior. But all of the step length choices still behave similarly.
 
+For Steepest Descent, we will discussion according to the functions one by one. We also discover the relationship of convergence speed cannot be linear related to the value of $\rho$. For example, the convergence speed may be $\rho=0.3<\rho=0.1<\rho=0.9<\rho=0.5$.
 
-Newton is not sensitive to the $\rho$ change.  % TODO reasoning
+For f1, the step length varies with $\rho=0.3$ achieves the fastest convergence, more specifically the iteration number $\rho=0.3<\rho=0.1<\rho=0.9<\rho=0.5$. 
+For f2, the step length varies with $\rho=0.9$ achieves the fastest convergence, with 1 iteration and reach a optimization. Others miss the optimized solution, and converge slowly. 
+For f3, the $\rho=0.5$ and $\rho=0.3$ can reach a convergence but not the optimized, while the $\rho=0.1$ and $\rho=0.9$ reaches a stagnation.
+For f4, $\rho=0.5$ reaches the optimization in 1 iterations. Others also can reach a optimization, but much slower, and $\rho=0.9$ has a zig-zag.
+For f5, all can reach a optimization, while different iterations required, typically $\rho=0.5 < \rho=0.1 \approx \rho=0.3 < \rho=0.9$.
 
 \subsection{Convergence Plots and Analysis}
 % Show convergence plots and based on the empirical results, state whether the algorithms likely have Q-linear, Q-superlinear or maybe even Q-quadratic convergence on the different functions.
@@ -141,30 +152,35 @@ The convergence plots is shown in Figure~\ref{fig:convgraph}.
 
 For f1, Newton's method vertically reaches optimum in 1 iteration, and it shows a Q-quadratic convergence. Steepest Descent  shows a slower convergence and it is a Q-Linear convergence.
 
-For f2, under Newton’s Method it is Q-quadratic convergence near the optimum, because it rapidly drop to zero after a few iterations. Under Steepest Descent, there is a slow, oscillatory decay, so it is Q-linear convergence.
+For f2, it is complicated. For Newton’s Method it looks only Q-super-linear, because the Hessian is ill-conditioned. For Steepest Descent, when the $\rho$ is as large as 0.9, it shows a Q-quadratic convergence. When $\rho$ is smaller(0.1,0.3,0.5), it behaves like Q-Sub-Linear. Here these $\rho$ may be too small, leading to numerical stagnation.
 
+For f3, we select a initial $x_0$ to make sure the Hessian function is well-conditioned(other $x_0$ may lead to stagnation in Newton's Method). So the Newton's Method is Q-quadratic. For Steepest Descent, it reaches stagnation, suggesting the step length may be missing the optimized solution, showing Q-Sub-Linear.
+% $\rho=0.1$ and $\rho=0.9$ 
 
+For f4, Newton's method vertically reaches optimum in 1 iteration, and it shows a Q-quadratic convergence. Steepest Descent is Q-Linear.
+
+For f5, Newton's method and Steepest Descent are all Q-Linear.
 
 \begin{figure}[ht]
 \centering
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f1}
+    \includegraphics[width=0.15\columnwidth, keepaspectratio]{code_week2/f1}
 \label{fig:f1}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f2}
+    \includegraphics[width=0.15\columnwidth, keepaspectratio]{code_week2/f2}
     \label{fig:f2}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f3}
+    \includegraphics[width=0.15\columnwidth, keepaspectratio]{code_week2/f3}
     \label{fig:f3}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f4}
+    \includegraphics[width=0.15\columnwidth, keepaspectratio]{code_week2/f4}
     \label{fig:f4}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{code_week2/f5}
+    \includegraphics[width=0.15\columnwidth, keepaspectratio]{code_week2/f5}
     \label{fig:f5}
 }
 \caption[]{Convergence graph(log scale) of the three optimize algorithms on the five functions, analyzing iterations}
