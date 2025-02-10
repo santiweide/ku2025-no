@@ -49,12 +49,13 @@ The Hessian H(x) is a matrix of second-order partial derivatives of f(x). It pro
 
 To determine if a critical point $x^*$ is a local minimizer, we mainly apply the Second Order Sufficient Conditions, which includes the the $H(x^*)$ is positive definite (all eigenvalues are positive), then $x^*$ is a strict local minimizer by equation~\ref{critical}.
 
+The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0). % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
 
-%The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0). % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+BFGS is a quasi-Newton method. It is gradient-based, so results depend on the initial guess and may converge to different local minima. % TODO https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
 
-%The BFGS is a quasi-Newton method for unconstrained optimization, approximating the Hessian matrix to find a local minimum. It is gradient-based, so results depend on the initial guess and may converge to different local minima. % TODO reference
+Newton-Conjugate-Gradient algorithm uses a matrix of second-derivatives (the Hessian). It is a modified Newton’s method and uses a conjugate gradient algorithm to (approximately) invert the local Hessian. % https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
 
-
+Trust-Region Nearly Exact Algorithm only need the product of the Hessian with an arbitrary vector, so the algorithm is specially suited for dealing with sparse Hessians, allowing low storage requirements and significant time savings for those sparse problems. % https://docs.scipy.org/doc/scipy/tutorial/optimize.html#trust-region-nearly-exact-algorithm-method-trust-exact
 
 \section{Experiments}
 
