@@ -182,7 +182,7 @@ Trust-Region required the fewest function evaluations, outperforming BFGS and Ne
 \end{table}
 
 
-\subsection{The Log-Ellipsoid Function(f3))}
+\subsection{The Log-Ellipsoid Function(f3)}
 As shown in Fig 1(c),  for the mixed initial point $x_0 = (1, 1,1 ,1, 1)$, the BFGS and Newton algorithms successfully  converged to the optimal solution with final gradient norms close to ($1e^{-30}$), while the Trust Region algorithm fail to converge, the relevant result is in Table~\ref{tab:f3}.
 
 \textbf{Evaluation Iterations}  BFGS required the fewest function evaluations(70) , and the second is Newton(147),  This suggests that the gradient-based method adapted more efficiently to the problem’s
@@ -195,11 +195,11 @@ curvature and the trust-region algorithm do not.
         \toprule
         Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
         \midrule
-        Final Solution Point & $[2.8e^{-18}, -8.5e^{-18}, 7.8e^{-18}, 5.5e^{-18}, 5.6e^{-19}]$& $[-2.1e^{-23}, -1.6e^{-18}, -1.3e^{-21}, -5.5e^{-27}, 4.1e^{-28}]$& $[5.9e^{-16}, -4.3e^{-16}, -2.4e^{-17}, -7.7e^{-18}, 1.9e^{-17}]$\\
-        Distance to Optimum & $1.31\times e^{-17}$& $1.66\times e^{-18}$& $7.39\times e^{-16}$\\
+        Final Solution Point & $[2.8e-18, -8.5e-18, 7.8e-18, 5.5e-18, 5.6e-19]$& $[-2.1e-23, -1.6e-18, -1.3e-21, -5.5e-27, 4.1e-28]$& $[5.9e-16, -4.3e-16, -2.4e-17, -7.7e-18, 1.9e-17]$\\
+        Distance to Optimum & $1.31\times e-17$& $1.66\times e-18$& $7.39\times e-16$\\
         Function Evaluations & 70& 147& 29\\
-        Final Function Value & $8.1\times e^{-29}$& $1.56\times e^{-31}$& $1.83\times e^{-26}$\\
-        Final Gradient Norm & $2.31\times e^{-11}$& $1.87\times e^{-13}$& $4.02\times e^{-10}$\\
+        Final Function Value & $8.1\times e-29$& $1.56\times e-31$& $1.83\times e-26$\\
+        Final Gradient Norm & $2.31\times e-11$& $1.87\times e-13$& $4.02\times e-10$\\
         Convergence Success & True& True& False\\
         Runtime (s) & 0.02529& 0.034846& 0.00749\\
         \bottomrule
@@ -225,10 +225,10 @@ The Newton and Trust Region algorithm have a similar perform, better than BFGS(8
     Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
     \midrule
     Final Solution Point & $[0.0019, 0.0019]$& $[0.0019, 0.0019]$& $[0.0019, 0.0019]$\\
-    Distance to Optimum & $3.46\times e^{-13}$& $1.18\times e^{-11}$& $1.18\times e^{-11}$\\
+    Distance to Optimum & $3.46\times e-13$& $1.18\times e-11$& $1.18\times e-11$\\
     Function Evaluations & 14& 8& 9\\
-    Final Function Value & $1.22\times e^{-5}$& $1.22\times e^{-5}$& $1.22\times e^{-5}$\\
-    Final Gradient Norm & $2.91\times e^{-12}$& $9.97\times e^{-11}$& $9.97\times e^{-11}$\\
+    Final Function Value & $1.22\times e-5$& $1.22\times e-5$& $1.22\times e-5$\\
+    Final Gradient Norm & $2.91\times e-12$& $9.97\times e-11$& $9.97\times e-11$\\
     Convergence Success & True& True& True\\
     Runtime (s) & 0.007121& 0.003537& 0.004539\\
     \bottomrule
@@ -249,7 +249,7 @@ The Newton get the best performance on f5, requires only 13 steps to optimum, fo
     \toprule
     Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
     \midrule
-    Final Solution Point & $[-1.67e^{-34}, 2.78e^{-4}]$& $[1.14e^{-17}, 5.78e^{-3}]$& $[0, 0.0020049]$\\
+    Final Solution Point & $[-1.67e-34, 2.78e-4]$& $[1.14e-17, 5.78e-3]$& $[0, 0.0020049]$\\
     Distance to Optimum & 0.00027& 0.00578& 0.0002\\
     Function Evaluations & 28& 13& 22\\
     Final Function Value & 5.98& 1.12& 1.6\\
@@ -271,6 +271,14 @@ The Newton get the best performance on f5, requires only 13 steps to optimum, fo
 \section{Conclusion}
 
 We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, that is, BFGS and Newton-GC, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
+
+Our protocol evaluated algorithms by a metric including the dims of initial guess, alpha, final solution point, distance to optimum, function evaluation steps, final function value, final norm, and the runtime of the three algorithm on 5 optimizer to test the four criteria for the algorithms.
+
+Testing by our protocol, the trust region get the best performance, it gets a rank of [1, 1, 1, 2, 2] in the five function, and BFGS and Newton gets [3, 2, 2, 3, 3], [1, 3, 3, 1, 1] respectively.
+
+Meanwhile, the Ellipsoid Function(f1) outperforms than the other four optimizer, it get the least steps and the time to toptimum on average, followed by the Attractive-Sector Function(f4), and The Log-Ellipsoid Function(f3) is the worst, trust region algorithm can not convergence on it.
+
+In sum, we design and implement a good protocol with detailed performance metrics output and good visualization capabilities as a model, but it is not good enough to count the number of function evaluations and it relies on external best-point functions.
 
 %What knowledge have we gained?
 %Could we answer the question we set out to answer in the Introduction?
