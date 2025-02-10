@@ -270,7 +270,7 @@ The Newton get the best performance on f5, requires only 13 steps to optimum, fo
 
 \section{Conclusion}
 
-We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, that is, BFGS and Newton-GC, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
+We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, BFGS, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
 
 Our protocol evaluated algorithms by a metric including the dims of initial guess, alpha, final solution point, distance to optimum, function evaluation steps, final function value, final norm, and the runtime of the three algorithm on 5 optimizer to test the four criteria for the algorithms.
 
