@@ -1,0 +1,31 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{scipy(2025{\natexlab{a}})}]{scipybfgs}
+scipy. 2025{\natexlab{a}}.
+\newblock scipy.optimize user guide-bfgs.
+\newblock \url{
+  https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs}.
+\newblock [Online; accessed 2025].
+
+\bibitem[{scipy(2025{\natexlab{b}})}]{scipy}
+scipy. 2025{\natexlab{b}}.
+\newblock scipy.optimize user guide-newton gc.
+\newblock \url{ https://docs.scipy.org/doc/scipy/tutorial/optimize.htm}.
+\newblock [Online; accessed 2025].
+
+\bibitem[{scipy(2025{\natexlab{c}})}]{scipynewton}
+scipy. 2025{\natexlab{c}}.
+\newblock scipy.optimize user guide-newton gc.
+\newblock \url{
+  https://docs.scipy.org/doc/scipy/tutorial/optimize.html#newton-conjugate-gradient-algorithm-method-newton-cg}.
+\newblock [Online; accessed 2025].
+
+\bibitem[{scipy~trust region(2025)}]{scipytrust}
+scipy~trust region. 2025.
+\newblock scipy.optimize user guide-trust region.
+\newblock \url{
+  https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs}.
+\newblock [Online; accessed 2025].
+
+\end{thebibliography}

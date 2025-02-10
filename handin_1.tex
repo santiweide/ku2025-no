@@ -12,7 +12,9 @@
 \usepackage{xcolor}
 \usepackage{subfigure}
 
+\bibliographystyle{acl_natbib}
 
+\usepackage{hyperref}
 
 \title{Handin 1}
 
@@ -23,7 +25,7 @@
 
 In this project we develop a testing protocol and performance metric for algorithms provided in common optimization toolboxes. The algorithm we test on includes the Ellipsoid function(f1), the Rosenbrock Banana Function(f2), the Log-Ellipsoid Function(f3), the Attractive-Sector Function(f4), and the Sum of Different Powers Function(f5). We focus on three different optimization algorithms, including the Broyden-Fletcher-Goldfarb-Shanno(BFGS), Newton-CG, and trust-region.
 
-Our metrics reflects the the four criteria for good algorithms. For \textbf{Robustness}, we develop test on different initial guesses and dims of the initial guesses. For \textbf{Accuracy} we record the precision when the optimizer reaches the tolerance rate. We also run with multiple initial guesses and calculate the running time in average, in order to prove the \textbf{Stability} and \textbf{Resource Efficiency}. % TODO cite NO notes 
+Our metrics reflects the the four criteria for good algorithms. For \textbf{Robustness}, we develop test on different initial guesses and dims of the initial guesses. For \textbf{Accuracy} we record the precision when the optimizer reaches the tolerance rate. We also run with multiple initial guesses and calculate the running time in average, in order to prove the \textbf{Stability} and \textbf{Resource Efficiency}, referencing the NO Notes. % TODO cite NO notes 
 Also we plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. 
 
 %Outlines the report.
@@ -49,13 +51,13 @@ The Hessian H(x) is a matrix of second-order partial derivatives of f(x). It pro
 
 To determine if a critical point $x^*$ is a local minimizer, we mainly apply the Second Order Sufficient Conditions, which includes the the $H(x^*)$ is positive definite (all eigenvalues are positive), then $x^*$ is a strict local minimizer by equation~\ref{critical}.
 
-The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0). % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0).  \cite{scipy} % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
 
-BFGS is a quasi-Newton method. It is gradient-based, so results depend on the initial guess and may converge to different local minima. % TODO https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
+BFGS is a quasi-Newton method. It is gradient-based, so results depend on the initial guess and may converge to different local minima.  \cite{scipybfgs}% TODO https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
 
-Newton-Conjugate-Gradient algorithm uses a matrix of second-derivatives (the Hessian). It is a modified Newton’s method and uses a conjugate gradient algorithm to (approximately) invert the local Hessian. % https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
+Newton-Conjugate-Gradient algorithm uses a matrix of second-derivatives (the Hessian). It is a modified Newton’s method and uses a conjugate gradient algorithm to (approximately) invert the local Hessian.  \cite{scipynewton}% https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
 
-Trust-Region Nearly Exact Algorithm only need the product of the Hessian with an arbitrary vector, so the algorithm is specially suited for dealing with sparse Hessians, allowing low storage requirements and significant time savings for those sparse problems. % https://docs.scipy.org/doc/scipy/tutorial/optimize.html#trust-region-nearly-exact-algorithm-method-trust-exact
+Trust-Region Nearly Exact Algorithm only need the product of the Hessian with an arbitrary vector, so the algorithm is specially suited for dealing with sparse Hessians, allowing low storage requirements and significant time savings for those sparse problems.  \cite{scipytrust}% https://docs.scipy.org/doc/scipy/tutorial/optimize.html#trust-region-nearly-exact-algorithm-method-trust-exact
 
 \section{Experiments}
 
@@ -155,7 +157,7 @@ As shown in Figure~\ref{fig:f2}, for the fixed initial point $x_0=(-1.2,1.0)$, a
 
 
 \textbf{Evaluation Iterations}  
-Trust-Region required the fewest function evaluations, outperforming BFGS and Newton-CG (27 vs 41 vs 107). This suggests that second-order methods generally adapted more efficiently to the problem’s curvature, but Newton-CG struggled due to the function's high condition number of its Hessian matrix. Also, if the dimension of $x0$ become larger, more iterations will be taken by Newton-CG to reach tolerance.
+Trust-Region required the fewest function evaluations, outperforming BFGS and Newton-CG (27 vs 41 vs 107). This suggests that second-order methods(Newton-GC and Trust-Region) generally adapted more efficiently to the problem’s curvature. Also, if the dimension of $x0$ become larger, more iterations will be taken by Newton-CG to reach tolerance.
 
 %\textbf{Runtime}  
 %Trust-Region achieved the fastest runtime, followed by BFGS and Newton-CG.  
@@ -274,5 +276,6 @@ We have some take away on the initial guess choice according to the different op
 %What knowledge have we gained?
 %Could we answer the question we set out to answer in the Introduction?
 
+\bibliography{custom}
 
 \end{document}
