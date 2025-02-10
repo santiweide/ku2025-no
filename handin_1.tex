@@ -185,9 +185,8 @@ Trust-Region required the fewest function evaluations, outperforming BFGS and Ne
 \subsection{The Log-Ellipsoid Function(f3))}
 As shown in Fig 1(c),  for the mixed initial point $x_0 = (1, 1,1 ,1, 1)$, the BFGS and Newton algorithms successfully  converged to the optimal solution with final gradient norms close to ($1e^{-30}$), while the Trust Region algorithm fail to converge, the relevant result is in Table~\ref{tab:f3}.
 
-\textbf{Evaluation Iterations}  BFGS required the fewest function evaluations(70) , and the second is Newton(147),  This suggests....
-%todo 
-Also, 
+\textbf{Evaluation Iterations}  BFGS required the fewest function evaluations(70) , and the second is Newton(147),  This suggests that the gradient-based method adapted more efficiently to the problem’s
+curvature and the trust-region algorithm do not.
 
 \begin{table}[h]
     \centering
@@ -217,7 +216,7 @@ Also,
 As shown in  Fig 1(d), for the fixed x0 = (1, 1), all the three algorithm  successfully converged to the optimal solution, with gradient norms close to (1e-11), the relevant result is in Table~\ref{tab:f4}.
 
 \textbf{Evaluation Iterations}  
-The Newton and Trust Region algorithm have a similar perform 
+The Newton and Trust Region algorithm have a similar perform, better than BFGS(8, 9, 14 respectively), which suggests that the second-derivatives method is better on this problem.
 
 \begin{table}[h]
     \centering
@@ -243,7 +242,7 @@ The Newton and Trust Region algorithm have a similar perform
 As shown in  Fig 1(e), for the fixed x0 = (1, 1), all the three algorithm  successfully converged to the optimal solution, with gradient norms close to (5), the relevant result is in Table~\ref{tab:f5}.
 
 \textbf{Evaluation Iterations}  
-
+The Newton get the best performance on f5, requires only 13 steps to optimum, followed by trust region with 22 steps, and finnaly BFGS with 28 steps. It is also obviously that the second order method is also better that the gradient-based method here.
 \begin{table}[h]
     \centering
 \begin{tabular}{lccc}
