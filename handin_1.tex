@@ -33,14 +33,9 @@ Also we plot the convergence process with the 2-norm distance in log scale to se
 
 \section{Theory}
 
-%Your Theoretical contributions.
-%Theoretical considerations that shape choices in the experimental section.
-%considerations that shape the choices of initial guesses in the experimental section.
-% For gradient-based methods (e.g., BFGS, Newton), we want to choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, we want to ensure the Hessian is positive definite at the initial point. 
+This section outlines the theoretical background of the optimization algorithm, providing insights into the experimental results. We analyze the convergence properties of the given functions by computing the gradient and Hessian and identify minimizers using the Second-Order Sufficient Conditions (SOSC).
 
-Here we are going to introduce our theoretical background for the optimize algorithm, which will help us understand the experiment results. We narrow down some theoretical convergence status of the given functions by calculating Gradient and Hessian, and find the minimizer using the second order sufficient conditions. 
-
-The gradient of a function is a vector of its first-order partial derivatives. A point $x^*$ is a critical point if the gradient is zero, and the critical points are candidates for local minima points.
+The gradient of a function is the vector of its first-order partial derivatives. A point $x^*$ is critical if the gradient vanishes, making it a candidate for a local minimum:
 
 \begin{equation}
 \nabla f(x^*) = 0
@@ -51,13 +46,13 @@ The Hessian H(x) is a matrix of second-order partial derivatives of f(x). It pro
 
 To determine if a critical point $x^*$ is a local minimizer, we mainly apply the Second Order Sufficient Conditions, which includes the the $H(x^*)$ is positive definite (all eigenvalues are positive), then $x^*$ is a strict local minimizer by equation~\ref{critical}.
 
-The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0).  \cite{scipy} % TODO reference to scipy official document: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+The optimizers in scipy package aim to find the local minimum value of a function starting from a given array, namely initial guess(x0).  \cite{scipy} 
 
-BFGS is a quasi-Newton method. It is gradient-based, so results depend on the initial guess and may converge to different local minima.  \cite{scipybfgs}% TODO https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
+BFGS is a quasi-Newton method that relies on gradient information. Its convergence depends on the initial guess and may lead to different local minima \cite{scipybfgs}.
 
-Newton-Conjugate-Gradient algorithm uses a matrix of second-derivatives (the Hessian). It is a modified Newton’s method and uses a conjugate gradient algorithm to (approximately) invert the local Hessian.  \cite{scipynewton}% https://docs.scipy.org/doc/scipy/tutorial/optimize.html#broyden-fletcher-goldfarb-shanno-algorithm-method-bfgs
+Newton-Conjugate-Gradient utilizes second-order derivative information (Hessian) and applies a conjugate gradient method to approximate its inverse \cite{scipynewton}.
 
-Trust-Region Nearly Exact Algorithm only need the product of the Hessian with an arbitrary vector, so the algorithm is specially suited for dealing with sparse Hessians, allowing low storage requirements and significant time savings for those sparse problems.  \cite{scipytrust}% https://docs.scipy.org/doc/scipy/tutorial/optimize.html#trust-region-nearly-exact-algorithm-method-trust-exact
+Trust-Region Nearly Exact Algorithm requires only Hessian-vector products, making it particularly efficient for sparse Hessians by reducing storage and computational costs \cite{scipytrust}.
 
 \section{Experiments}
 
@@ -70,6 +65,7 @@ We choose different values and dims of initial guess, alpha and optimizers to fi
 \begin{table}[h!]
 \label{table:rule}
 \centering
+    \scalebox{0.6}{ % 
 \begin{tabular}{cc}
 \toprule
  \textbf{Item} & \textbf{Value} \\ 
@@ -82,6 +78,7 @@ We choose different values and dims of initial guess, alpha and optimizers to fi
 \textbf{Epsilon on Tolerance} & 1e-10 \\
 \bottomrule
 \end{tabular}
+}
 \caption{Variants for experiment setups; x0 means the initial guess}
 \end{table}
 
@@ -96,23 +93,23 @@ For the various testing functions, we are going to discussion them separately in
 \begin{figure}[ht]
 \centering
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{pics/f1-d2}
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/f1-d2}
 \label{fig:f1}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{pics/f2-d2}
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/f2-d2}
     \label{fig:f2}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{pics/f3-d5}
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/f3-d5}
     \label{fig:f3}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{pics/f4-d2}
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/f4-d2}
     \label{fig:f4}
 }
 \subfigure[]{
-    \includegraphics[width=0.25\columnwidth, keepaspectratio]{pics/f5-d2}
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/f5-d2}
     \label{fig:f5}
 }
 \caption[]{Convergence graph(log scale) of the three optimize algorithms on the five functions, analyzing iterations}
@@ -190,25 +187,29 @@ curvature and the trust-region algorithm do not.
 
 \begin{table}[h]
     \centering
-    \scalebox{0.6}{
-        \begin{tabular}{lccc}
+    \scalebox{0.6}{ % 
+        \begin{tabular}{l p{7cm} p{7cm} p{7cm}} % 
         \toprule
         Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
         \midrule
-        Final Solution Point & $[2.8e-18, -8.5e-18, 7.8e-18, 5.5e-18, 5.6e-19]$& $[-2.1e-23, -1.6e-18, -1.3e-21, -5.5e-27, 4.1e-28]$& $[5.9e-16, -4.3e-16, -2.4e-17, -7.7e-18, 1.9e-17]$\\
-        Distance to Optimum & $1.31\times e-17$& $1.66\times e-18$& $7.39\times e-16$\\
-        Function Evaluations & 70& 147& 29\\
-        Final Function Value & $8.1\times e-29$& $1.56\times e-31$& $1.83\times e-26$\\
-        Final Gradient Norm & $2.31\times e-11$& $1.87\times e-13$& $4.02\times e-10$\\
-        Convergence Success & True& True& False\\
-        Runtime (s) & 0.02529& 0.034846& 0.00749\\
+        Final Solution Point & 
+        $\begin{array}{c} [2.8\times10^{-18}, -8.5\times10^{-18}, \\ 7.8\times10^{-18}, 5.5\times10^{-18}, 5.6\times10^{-19}] \end{array}$ &
+        $\begin{array}{c} [-2.1\times10^{-23}, -1.6\times10^{-18}, \\ -1.3\times10^{-21}, -5.5\times10^{-27}, 4.1\times10^{-28}] \end{array}$ &
+        $\begin{array}{c} [5.9\times10^{-16}, -4.3\times10^{-16}, \\ -2.4\times10^{-17}, -7.7\times10^{-18}, 1.9\times10^{-17}] \end{array}$ \\
+        Distance to Optimum & $1.31\times10^{-17}$ & $1.66\times10^{-18}$ & $7.39\times10^{-16}$ \\
+        Function Evaluations & 70 & 147 & 29 \\
+        Final Function Value & $8.1\times10^{-29}$ & $1.56\times10^{-31}$ & $1.83\times10^{-26}$ \\
+        Final Gradient Norm & $2.31\times10^{-11}$ & $1.87\times10^{-13}$ & $4.02\times10^{-10}$ \\
+        Convergence Success & True & True & False \\
+        Runtime (s) & 0.02529 & 0.034846 & 0.00749 \\
         \bottomrule
         \end{tabular}
     }
-
     \caption{Optimization results for the Log-Ellipsoid Function.}
     \label{tab:f3}
 \end{table}
+
+
 
 
 
@@ -220,44 +221,53 @@ The Newton and Trust Region algorithm have a similar perform, better than BFGS(8
 
 \begin{table}[h]
     \centering
-\begin{tabular}{lccc}
-    \toprule
-    Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
-    \midrule
-    Final Solution Point & $[0.0019, 0.0019]$& $[0.0019, 0.0019]$& $[0.0019, 0.0019]$\\
-    Distance to Optimum & $3.46\times e-13$& $1.18\times e-11$& $1.18\times e-11$\\
-    Function Evaluations & 14& 8& 9\\
-    Final Function Value & $1.22\times e-5$& $1.22\times e-5$& $1.22\times e-5$\\
-    Final Gradient Norm & $2.91\times e-12$& $9.97\times e-11$& $9.97\times e-11$\\
-    Convergence Success & True& True& True\\
-    Runtime (s) & 0.007121& 0.003537& 0.004539\\
-    \bottomrule
-\end{tabular}
+    \begin{tabular}{lccc}
+        \toprule
+        Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
+        \midrule
+        Final Solution Point & 
+        $\begin{array}{c} [0.0019, 0.0019] \end{array}$ & 
+        $\begin{array}{c} [0.0019, 0.0019] \end{array}$ & 
+        $\begin{array}{c} [0.0019, 0.0019] \end{array}$ \\
+        Distance to Optimum & $3.46\times10^{-13}$ & $1.18\times10^{-11}$ & $1.18\times10^{-11}$ \\
+        Function Evaluations & 14 & 8 & 9 \\
+        Final Function Value & $1.22\times10^{-5}$ & $1.22\times10^{-5}$ & $1.22\times10^{-5}$ \\
+        Final Gradient Norm & $2.91\times10^{-12}$ & $9.97\times10^{-11}$ & $9.97\times10^{-11}$ \\
+        Convergence Success & True & True & True \\
+        Runtime (s) & 0.007121 & 0.003537 & 0.004539 \\
+        \bottomrule
+    \end{tabular}
     \caption{Optimization results for the Log-Ellipsoid Function.}
     \label{tab:f4}
 \end{table}
-
 
 \subsection{The Sum of Different Powers Function(f5)}
 As shown in  Fig 1(e), for the fixed x0 = (1, 1), all the three algorithm  successfully converged to the optimal solution, with gradient norms close to (5), the relevant result is in Table~\ref{tab:f5}.
 
 \textbf{Evaluation Iterations}  
 The Newton get the best performance on f5, requires only 13 steps to optimum, followed by trust region with 22 steps, and finnaly BFGS with 28 steps. It is also obviously that the second order method is also better that the gradient-based method here.
+
 \begin{table}[h]
     \centering
-\begin{tabular}{lccc}
-    \toprule
-    Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
-    \midrule
-    Final Solution Point & $[-1.67e-34, 2.78e-4]$& $[1.14e-17, 5.78e-3]$& $[0, 0.0020049]$\\
-    Distance to Optimum & 0.00027& 0.00578& 0.0002\\
-    Function Evaluations & 28& 13& 22\\
-    Final Function Value & 5.98& 1.12& 1.6\\
-    Final Gradient Norm & 8.61& 7.76& 3.2\\
-    Convergence Success & True& True& True\\
-    Runtime (s) & 0.007399& 0.004058& 0.006227\\
-    \bottomrule
-\end{tabular}
+    \scalebox{0.8}{ % 
+
+    \begin{tabular}{lccc}
+        \toprule
+        Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
+        \midrule
+        Final Solution Point & 
+        $\begin{array}{c} [-1.67\times10^{-34}, 2.78\times10^{-4}] \end{array}$ & 
+        $\begin{array}{c} [1.14\times10^{-17}, 5.78\times10^{-3}] \end{array}$ & 
+        $\begin{array}{c} [0, 0.0020049] \end{array}$ \\
+        Distance to Optimum & $2.7\times10^{-4}$ & $5.78\times10^{-3}$ & $2.0\times10^{-4}$ \\
+        Function Evaluations & 28 & 13 & 22 \\
+        Final Function Value & 5.98 & 1.12 & 1.6 \\
+        Final Gradient Norm & 8.61 & 7.76 & 3.2 \\
+        Convergence Success & True & True & True \\
+        Runtime (s) & 0.007399 & 0.004058 & 0.006227 \\
+        \bottomrule
+    \end{tabular}
+    }
     \caption{Optimization results for the Log-Ellipsoid Function.}
     \label{tab:f5}
 \end{table}
@@ -270,15 +280,12 @@ The Newton get the best performance on f5, requires only 13 steps to optimum, fo
 
 \section{Conclusion}
 
-We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, BFGS, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
+Our protocol evaluated algorithms by a metric including the dims of initial guess, alpha, final solution point, distance to optimum, function evaluation steps, final function value, final norm, and the runtime of the three algorithm on five optimizer to test the four criteria for the algorithms. 
 
-Our protocol evaluated algorithms by a metric including the dims of initial guess, alpha, final solution point, distance to optimum, function evaluation steps, final function value, final norm, and the runtime of the three algorithm on 5 optimizer to test the four criteria for the algorithms.
+\textbf{Take away: } We have some take away on the initial guess choice according to the different optimized algorithm. For gradient-based methods, BFGS, we should choose a point where the function is differentiable and smooth to avoid numerical instability. For Newton-type methods, according to the experiment in f3, we want to ensure the Hessian is positive definite at the initial point. 
 
-Testing by our protocol, the trust region get the best performance, it gets a rank of [1, 1, 1, 2, 2] in the five function, and BFGS and Newton gets [3, 2, 2, 3, 3], [1, 3, 3, 1, 1] respectively.
+\textbf{Experimental Shortcomings: } More tests on the input dimensions could be added. Further analysis based on the three different optimize functions should be conducted, too.
 
-Meanwhile, the Ellipsoid Function(f1) outperforms than the other four optimizer, it get the least steps and the time to toptimum on average, followed by the Attractive-Sector Function(f4), and The Log-Ellipsoid Function(f3) is the worst, trust region algorithm can not convergence on it.
-
-In sum, we design and implement a good protocol with detailed performance metrics output and good visualization capabilities as a model, but it is not good enough to count the number of function evaluations and it relies on external best-point functions.
 
 %What knowledge have we gained?
 %Could we answer the question we set out to answer in the Introduction?
