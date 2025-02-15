@@ -23,10 +23,9 @@
 
 \section{Introduction}
 
-In this project we develop a testing protocol and performance metric for algorithms provided in common optimization toolboxes. The algorithm we test on includes the Ellipsoid function(f1), the Rosenbrock Banana Function(f2), the Log-Ellipsoid Function(f3), the Attractive-Sector Function(f4), and the Sum of Different Powers Function(f5). We focus on three different optimization algorithms, including the Broyden-Fletcher-Goldfarb-Shanno(BFGS), Newton-CG, and trust-region.
+We develop a testing protocol and performance metric for optimization algorithms in common toolboxes. We evaluate five test functions in case study with BFGS, Newton-CG, and trust-region methods.
 
-Our metrics reflects the the four criteria for good algorithms. For \textbf{Robustness}, we develop test on different initial guesses and dims of the initial guesses. For \textbf{Accuracy} we record the precision when the optimizer reaches the tolerance rate. We also run with multiple initial guesses and calculate the running time in average, in order to prove the \textbf{Stability} and \textbf{Resource Efficiency}, referencing the NO Notes. % TODO cite NO notes 
-Also we plot the convergence process with the 2-norm distance in log scale to see the algorithm performance in visual. 
+Our metrics assess four key criteria: Robustness (testing different initial guesses and dimensions), Accuracy (precision at tolerance), Stability, and Resource Efficiency (average runtime over multiple initializations). We also visualize convergence using the 2-norm distance in log scale.
 
 %Outlines the report.
 %Contains information about contents, (research) questions and overall structure.
@@ -127,6 +126,8 @@ Newton-CG and Trust-Region outperforms BFGS on the number of evaluation iteratio
 
 \begin{table}[h]
     \centering
+        \scalebox{0.6}{ % 
+
 \begin{tabular}{lccc}
     \toprule
     Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
@@ -140,6 +141,7 @@ Newton-CG and Trust-Region outperforms BFGS on the number of evaluation iteratio
     Runtime (s) & 0.002473 & 0.002091 & 0.001253 \\
     \bottomrule
 \end{tabular}
+}
     \caption{Optimization results for the Ellipsoid Function.}
     \label{tab:f1}
 \end{table}
@@ -161,6 +163,8 @@ Trust-Region required the fewest function evaluations, outperforming BFGS and Ne
 
 \begin{table}[h]
     \centering
+        \scalebox{0.6}{ % 
+
 \begin{tabular}{lccc}
     \toprule
     Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
@@ -174,6 +178,7 @@ Trust-Region required the fewest function evaluations, outperforming BFGS and Ne
     Runtime (s) & 0.00758 & 0.009386 & 0.004087 \\
     \bottomrule
 \end{tabular}
+}
     \caption{Optimization results for the Rosenbrock Banana Function.}
     \label{tab:f2}
 \end{table}
@@ -221,6 +226,8 @@ The Newton and Trust Region algorithm have a similar perform, better than BFGS(8
 
 \begin{table}[h]
     \centering
+        \scalebox{0.6}{ % 
+
     \begin{tabular}{lccc}
         \toprule
         Metric & scipy\_bfgs & scipy\_newton & scipy\_trust\_region \\
@@ -237,6 +244,7 @@ The Newton and Trust Region algorithm have a similar perform, better than BFGS(8
         Runtime (s) & 0.007121 & 0.003537 & 0.004539 \\
         \bottomrule
     \end{tabular}
+    }
     \caption{Optimization results for the Attractive-Sector Function.}
     \label{tab:f4}
 \end{table}
@@ -249,7 +257,7 @@ The Newton get the best performance on f5, requires only 13 steps to optimum, fo
 
 \begin{table}[h]
     \centering
-    \scalebox{0.8}{ % 
+    \scalebox{0.6}{ % 
 
     \begin{tabular}{lccc}
         \toprule
