@@ -54,16 +54,15 @@
 %Outlines the report.
 %Contains information about contents, (research) questions and overall structure.
 
-We evaluates the Conjugate Gradient (CG) and Approximate Newton algorithms for optimization. Key objectives include:
+We evaluates the Conjugate Gradient (CG) and Approximate Newton algorithms for optimization on $f_1$, $f_4$, and $f_5$. Key objectives include:
 \begin{itemize}
-    \item Implementation validation strategies
     \item Performance analysis under different $\eta$ schedules
-    \item Convergence rate comparisons with classical methods
     \item CG step efficiency analysis
+    \item Comparison of the original Newton's algorithm and Steepest Descent to approximate Newton
 \end{itemize}
 
 
-\section{Theoretical Questions}
+\section{Theory Questions}
 \subsection{Question 1}
 
 \subsection{Question 2}
@@ -107,6 +106,7 @@ eps_k = eta_k * norm_g
     \toprule
     Parameter & Values \\ 
     \midrule
+    $x_0$ &  Sample from the standard normal distribution (mean=0, stdev=1).\\
     $\eta$ schedules & Linear ($\eta_k = 1/2$), Superlinear, Quadratic \\
     Stopping criteria & $\|\nabla f\| < 10^{-6}$ \\
     Max iterations & 15 \\
@@ -131,24 +131,39 @@ The Hessian of $f_5$ is always positive definite, because the diagonal term is $
 
 \subsection{Convergence Behavior}
 
-Performance of approximate Newton algorithm under different schedules of $\eta_k$ is as shown in figure ~\ref{fig:convergence}. We can see the Quadratic  convergences fastest, then the Superlinear, and the Linear Convergence the slowest and behaves like steepest decent.
+Performance of approximate Newton algorithm under different schedules of $\eta_k$ is as shown in figure ~\ref{fig:f1}, ~\ref{fig:f4}, ~\ref{fig:f5}. We can see the Quadratic  convergences fastest, then the Superlinear, and the Linear Convergence the slowest.
 
-\textbf{Theoretical Analysis} Let $p_k$ be the search direction, and $H_k p_k = \nabla f(x_k)$. Then $\eta_k$ determines the accuracy of $p_k$, effecting the convergence rate by defining the stoping condition:
+\subsection{Theoretical Analysis on Convergence}
+Let $p_k$ be the search direction, and $H_k p_k = \nabla f(x_k)$. Then $\eta_k$ determines the accuracy of $p_k$, effecting the convergence rate by defining the stoping condition:
 
 \begin{equation}
 ||H_k p_k + \nabla f(x_k)|| \leq \eta_k || \nabla f(x_k) ||
 \end{equation}
 
-For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq c ||\nabla f(x_{k}||$, for some $0<c<1$. Then Approximate Newton behaves similarly to Gradient Descent, achieving at most linear convergence.
+For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq c ||\nabla f(x_{k}||$, for some $0<c<1$. Then Approximate Newton behaves similarly to Gradient Descent, achieving at most linear convergence. This is consistent to our figures' result.
 
-
+For Quadratic Convergence, it is always the most similar to the Classical Newton method. And for Superlinear convergence, it is between the Quadratic Convergence and Linear Convergence. 
 
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{pics/h3-1}
-    \caption{Comparison of convergence rates under different $\eta$ schedules}
-    \label{fig:convergence}
+    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_1$), D=100}
+    \label{fig:f1}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/h3-4}
+    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_4$), D=100}
+    \label{fig:f4}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/h3-5}
+    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_5$), D=100}
+    \label{fig:f5}
 \end{figure}
 
 
@@ -159,7 +174,9 @@ For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq 
     \item Quadratic Convergence: there needs to be more CG iterations per step.
     \item Superlinear Convergence: Faster than linear but not as fast as quadratic.
 \end{itemize}
+% TODO Dimension-dependent effects on CG performance
 
+% Superlinear convergence requires careful $\eta$ scheduling.?
 
 \begin{table}[h]
     \centering
@@ -172,11 +189,9 @@ For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq 
         Quadratic & 10 & 130 & 13.00 \\
         \bottomrule
     \end{tabular}
-    \caption{CG Step Analysis for Different $\eta_k$ Schedule in Approximate Newton Method}
+    \caption{CG Step Analysis for Different $\eta_k$ Schedule in Approx. Newton with $f_1$}
     \label{tab:cg_steps}
 \end{table}
-
-
 
 \subsection{Method Comparison}
 \begin{tabular}{llll}
@@ -189,32 +204,10 @@ For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq 
     \bottomrule
 \end{tabular}
 
-\section{Discussion}
-\subsection{Theoretical vs Empirical Observations}
-\begin{itemize}
-    \item Quadratic convergence achieved only with exact line search
-    \item Superlinear convergence requires careful $\eta$ scheduling
-    \item Dimension-dependent effects on CG performance
-\end{itemize}
-
-\subsection{Limitations}
-\begin{itemize}
-    \item Restricted to convex problems (Hessian constraints)
-    \item Sensitivity to initial conditions
-    \item Curse of dimensionality in high-$d$ regimes
-\end{itemize}
-
 
 \section{Conclusion}
 
-Key findings:
-\begin{itemize}
-    \item Classical Newton performs well for the problem with cheap Hessians.
-    \item Approximate Newton provides best balance for $d \geq 20$. 
-    \item Adaptive $\eta$ scheduling crucial for optimal performance
-    \item CG efficiency depends on spectrum of Hessian
-\end{itemize}
-
+We find Classical Newton performs well for the problem with cheap Hessians($f_1$), and generally approximate Newton provides best balance for $d \geq 100$ ($f_4$, $f_5$). We can adapt $\eta$ schedules for a more optimal performance.
 
 
 \end{document}
