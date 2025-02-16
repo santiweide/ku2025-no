@@ -10,7 +10,7 @@
 \usepackage{xcolor}
 
 \usepackage{booktabs}
-
+\usepackage{subfigure}
 
 
 % Listings package for code rendering (No external dependencies)
@@ -63,10 +63,58 @@ We evaluates the Conjugate Gradient (CG) and Approximate Newton algorithms for o
 
 
 \section{Theory Questions}
-\subsection{Question 1}
+\subsection{Question 1.1}
+
+From equation (20), we have:
+\[
+p_{k+1} = v_{k+1} - \sum_{i=0}^{k} \beta_i p_i.
+\]
+Since $v_{k+1} = -\nabla f(x_{k+1})$, this can be rewritten as:
+\[
+p_{k+1} = -\nabla f(x_{k+1}) + \sum_{i=0}^{k} \beta_i p_i.
+\]
+By induction, the gradient at any step $k$ can be expressed as a linear combination of the search directions:
+\[
+\nabla f(x_k) = \sum_{i=0}^{k} \gamma_i p_i,
+\]
+for some coefficients $\gamma_i$, proving the desired result.
+
+\subsection{Question 1.2}
+
+From Theorem 6, we know that for a quadratic function:
+\[
+\nabla f(x_{k+1})^T p_i = 0, \quad \forall i \leq k.
+\]
+Since $p_i$ are conjugate with respect to $Q$, we express each gradient as:
+\[
+\nabla f(x_k) = \sum_{i=0}^{k} \gamma_i p_i.
+\]
+Taking the dot product with $\nabla f(x_j)$ for $j < k$:
+\[
+\nabla f(x_k)^T \nabla f(x_j) = \left( \sum_{i=0}^{k} \gamma_i p_i \right)^T \nabla f(x_j).
+\]
+By the conjugacy property, each $\nabla f(x_j)$ is a linear combination of $p_0, \dots, p_j$, and:
+\[
+\nabla f(x_k)^T \nabla f(x_j) = 0.
+\]
+Thus, the gradients remain mutually orthogonal.
+
 
 \subsection{Question 2}
 
+Using equation (21):
+\[
+p_{k+1} = -\nabla f(x_{k+1}) + \sum_{i=0}^{k} \beta_i p_i.
+\]
+Since each $p_i$ is a linear combination of past gradients, we conclude that:
+\[
+p_i \in \text{span}\{ \nabla f(x_0), \dots, \nabla f(x_i) \}.
+\]
+Thus, every search direction lies within the Krylov subspace:
+\[
+\mathcal{K}_k(Q, \nabla f(x_0)) = \text{span}\{ \nabla f(x_0), Q \nabla f(x_0), \dots, Q^k \nabla f(x_0) \}.
+\]
+This confirms the result.
 
 \section{Experiments}
 
@@ -129,54 +177,57 @@ The Hessian of $f_5$ is always positive definite, because the diagonal term is $
 
 \section{Results and Discussion}
 
-\subsection{Convergence Behavior}
+\subsection{Convergence Behavior and Analysis}
 
-Performance of approximate Newton algorithm under different schedules of $\eta_k$ is as shown in figure ~\ref{fig:f1}, ~\ref{fig:f4}, ~\ref{fig:f5}. We can see the Quadratic  convergences fastest, then the Superlinear, and the Linear Convergence the slowest.
+Performance of approximate Newton algorithm under different schedules of $\eta_k$ is as shown in figure ~\ref{fig:convgraph}. We can see the Quadratic  convergences fastest, then the Superlinear, and the Linear Convergence the slowest. 
 
-\subsection{Theoretical Analysis on Convergence}
-Let $p_k$ be the search direction, and $H_k p_k = \nabla f(x_k)$. Then $\eta_k$ determines the accuracy of $p_k$, effecting the convergence rate by defining the stoping condition:
+It is clear in $f_1$ and $f_4$ that the quadric schedule can achieve a Quadratic Convergence, and the error decreases sharply, forming an "L"-shaped curve in the last stage. The superlinear schedule can achieve a Superlinear Convergence, and the rate of decrease accelerates progressively, with the curve becoming steeper over time. The linear schedule can achieve a Linear Convergence, Exhibiting a straight-line decline on a logarithmic plot, with a constant slope.
 
-\begin{equation}
-||H_k p_k + \nabla f(x_k)|| \leq \eta_k || \nabla f(x_k) ||
-\end{equation}
+But for $f_5$ all the three strategies performs as linear convergence, which is quite surprising. We analyze the reason as follows:
 
-For Linear Convergence, $\eta_k$ is a constant, and $||\nabla f(x_{k+1})|| \leq c ||\nabla f(x_{k}||$, for some $0<c<1$. Then Approximate Newton behaves similarly to Gradient Descent, achieving at most linear convergence. This is consistent to our figures' result.
+For the Hessian of $f_5$, the diagonal elements corresponding to each variable are given by:
+\[
+\text{Hessian}_{ii} = \text{factor} \cdot (\text{factor} - 1) \cdot |x_i|^{\text{factor} - 2}.
+\]
+Here, the \textit{factor} increases linearly; for example, in the two-dimensional case, the factors are 2 and 4. As $x_i$ approaches zero, the Hessian element for the term with $\text{factor} = 2$ simplifies to:
+\[
+2 \cdot (2-1) \cdot |x_i|^0 = 2,
+\]
+while for $\text{factor} = 4$, it becomes:
+\[
+4 \cdot 3 \cdot |x_i|^2.
+\]
+As $x$ approaches zero, the Hessian elements of the higher-order terms tend to zero, which may cause the Hessian matrix to become very small in certain variable directions. Consequently, this may result in the Hessian matrix being nearly positive semi-definite but with a poor condition number. So the approximate Newton will not perform well.
 
-For Quadratic Convergence, it is always the most similar to the Classical Newton method. And for Superlinear convergence, it is between the Quadratic Convergence and Linear Convergence. 
 
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{pics/h3-1}
-    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_1$), D=100}
-    \label{fig:f1}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{pics/h3-4}
-    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_4$), D=100}
+\begin{figure}[ht]
+\centering
+\subfigure[Ellipsoid function($f_1$)]{
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/h3-1}
+\label{fig:f1}
+}
+\subfigure[Attractive-Sector Function($f_4$)]{
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/h3-4}
     \label{fig:f4}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{pics/h3-5}
-    \caption{Comparison of convergence rates under different $\eta$ schedules with the Ellipsoid function($f_5$), D=100}
+}
+\subfigure[Sum of Different Powers Function($f_5$)]{
+    \includegraphics[width=0.3\columnwidth, keepaspectratio]{pics/h3-5}
     \label{fig:f5}
+}
+\caption[]{Comparison of convergence rates under different $\eta$ schedules with $f_1$, $f_4$, $f_5$}
+\label{fig:convgraph}
 \end{figure}
-
-
 
 \subsection{CG Step Efficiency}
+Due to page limitation we only evaluate $f_1$ here. Our observations are as follows:
+
 \begin{itemize}
     \item Linear Approximate Newton uses fewer CG steps per iteration (~7.87), and trades accuracy per iteration for more iterations overall.
     \item Quadratic Convergence: there needs to be more CG iterations per step.
     \item Superlinear Convergence: Faster than linear but not as fast as quadratic.
 \end{itemize}
-% TODO Dimension-dependent effects on CG performance
 
-% Superlinear convergence requires careful $\eta$ scheduling.?
+% TODO Superlinear convergence requires careful $\eta$ scheduling.
 
 \begin{table}[h]
     \centering
@@ -194,16 +245,9 @@ For Quadratic Convergence, it is always the most similar to the Classical Newton
 \end{table}
 
 \subsection{Method Comparison}
-\begin{tabular}{llll}
-    \toprule
-    Metric & Approx. Newton & Classical Newton & Steepest Descent \\
-    \midrule
-    Convergence rate & Superlinear & Quadratic & Linear \\
-    Computational cost & Medium & High & Low \\
-    Memory requirements & Low & High & Low \\
-    \bottomrule
-\end{tabular}
+We also plot the convergence graph of classic newton and steepest descent in Figure ~\ref{fig:convgraph}. The computational cost refers to the complexity of calculating the Hessian, both time and memory.
 
+Classic Newton performs well when the Hessian Matrix is positive definite, and when its easy to calculate, the time and memory cost can be controlled. The Steepest Descent performs the worst but with low computational cost. The approximate newton method is a middle choice between them. So if the Hessian is positive definite, we prefer to choose Approximate Newton for a trade off of resources and efficiency; else we will use Steepest Descent.
 
 \section{Conclusion}
 
