@@ -3,8 +3,13 @@
 \usepackage{upquote}
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb}
-\usepackage{graphicx}
+\usepackage{graphicx}     % for including graphics
+\usepackage{caption}
+\usepackage{hyperref}     % optional, for links
+\usepackage{geometry}     % page geometry
 \usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \newenvironment{statement}[2][Statement]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \usepackage{xcolor}
@@ -12,7 +17,7 @@
 
 
 
-\title{Assignment 2}
+\title{Assignment 4}
 
 \begin{document}
 \maketitle
@@ -22,10 +27,50 @@
 %Outlines the report.
 %Contains information about contents, (research) questions and overall structure.
 
+This report investigates the performance of the BFGS Quasi-Newton method combined with a strict (strong) Wolfe line search strategy for solving unconstrained optimization problems. The overarching goal is to assess:
+\begin{itemize}
+    \item Implement BFGS with a strict Wolfe condition line search.
+    \item Evaluate its performance on various test functions, including high-dimensional problems.
+    \item Compare our BFGS implementation with Newton's method and SciPy's BFGS.
+    \item Analyze when BFGS is a competitive optimization method.
+\end{itemize}
+
+% The rest of the report is structured as follows: Section 2 provides the theoretical foundation, Section 3 describes the experimental setup, Section 4 presents results and discussion, and Section 5 concludes with key insights.
+
+
 \section{Theory}
 
 %Your Theoretical contributions.
 %Theoretical considerations that shape choices in the experimental section.
+
+\begin{enumerate}
+    \item (Sufficient decrease / Armijo) 
+    \[
+       f(x_k + \alpha_k p_k) \;\le\; f(x_k) \;+\; c_1 \,\alpha_k\, \nabla f(x_k)^\top p_k
+    \]
+    \item (Strong curvature) 
+    \[
+       \bigl|\nabla f(x_k + \alpha_k p_k)^\top p_k\bigr| \;\le\; c_2\, \bigl|\nabla f(x_k)^\top p_k\bigr|\quad(0 < c_1 < c_2 < 1).
+    \]
+\end{enumerate}
+Once a suitable $\alpha_k$ is found, we update $x_{k+1} = x_k + \alpha_k p_k$. Then define 
+\[
+s_k = x_{k+1} - x_k, \quad
+y_k = \nabla f(x_{k+1}) - \nabla f(x_k),
+\]
+and update $H_k$ by the BFGS formula:
+\[
+   H_{k+1} \;=\; \bigl(I - \rho_k\, s_k y_k^\top\bigr)\,H_k \,\bigl(I - \rho_k\, y_k s_k^\top\bigr) \;+\; \rho_k\, s_k s_k^\top,
+   \quad \text{where } \rho_k = \frac{1}{y_k^\top s_k}.
+\]
+Under suitable assumptions (e.g., $y_k^\top s_k > 0$) the matrix $H_k$ remains positive-definite, ensuring the search direction $p_k$ is indeed a descent direction.
+
+\subsection{Theory problem 1}
+
+
+
+\subsection{Theory problem 2}
+
 
 
 \section{Experiments}
@@ -33,6 +78,44 @@
 %Description of the experiments performed.
 %Description of procedure and evaluation metrics.
 %Also includes choices of parameters
+\subsection{Implementation of BFGS}
+\begin{algorithm}
+\caption{BFGS Quasi-Newton Method}
+\label{alg:BFGS}
+\begin{algorithmic}[1]
+\Require Objective function $f(x)$, gradient $\nabla f(x)$, initial guess $x_0$, tolerance $\epsilon$, maximum iterations $k_{\max}$.
+\Ensure Approximate minimizer $x^*$.
+\State Initialize: $x \gets x_0$, $H \gets I$ (identity matrix), $k \gets 0$
+\State Compute initial gradient: $g \gets \nabla f(x)$
+\While{$\| g \| > \epsilon$ \textbf{and} $k < k_{\max}$}
+    \State Compute descent direction: $p \gets - H g$
+    \State Perform line search to find step size $\alpha$ satisfying strict Wolfe conditions
+    \State Update solution: $x_{\text{new}} \gets x + \alpha p$
+    \State Compute new gradient: $g_{\text{new}} \gets \nabla f(x_{\text{new}})$
+    \State Compute differences: $s \gets x_{\text{new}} - x$, $y \gets g_{\text{new}} - g$
+    \If{$s^\top y > 0$} \Comment{Ensure curvature condition holds}
+        \State Compute update factor: $\rho \gets \frac{1}{y^\top s}$
+        \State Update Hessian approximation:
+        \State $H \gets (I - \rho s y^\top) H (I - \rho y s^\top) + \rho s s^\top$
+    \EndIf
+    \State Update variables: $x \gets x_{\text{new}}, g \gets g_{\text{new}}, k \gets k + 1$
+\EndWhile
+\State \Return $x$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Evaluation Metrics}
+\begin{itemize}
+    \item \textbf{Iteration count}: Number of steps until convergence.
+    \item \textbf{Function evaluations}: Cost in function/gradient calls.
+    \item \textbf{Final function value} \( f(\mathbf{x}) \) and gradient norm \( \|\nabla f(\mathbf{x})\| \).
+\end{itemize}
+\subsection{Implementation Details}
+\begin{itemize}
+    \item \textbf{BFGS}: Uses strict Wolfe line search with parameters \( c_1 = 10^{-4}, c_2 = 0.9 \).
+    \item \textbf{Newton}: Computes full Hessian and applies exact Newton steps.
+    \item \textbf{SciPy BFGS}: Uses \texttt{scipy.optimize.minimize}.
+\end{itemize}
 
 
 \section{Results and Discussion}
@@ -44,7 +127,7 @@
 \section{Conclusion}
 
 %What knowledge have we gained?
-5Could we answer the question we set out to answer in the Introduction?
+%5Could we answer the question we set out to answer in the Introduction?
 
 
 \end{document}
