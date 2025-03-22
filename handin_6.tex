@@ -8,7 +8,11 @@
 \newenvironment{statement}[2][Statement]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
 \usepackage{xcolor}
-
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{placeins}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
 
 \usepackage{booktabs}
 \usepackage{subfigure}
@@ -191,11 +195,52 @@ To verify correctness, we evaluate the KKT conditions at each computed solution,
 \end{enumerate}
 In practice, using a relative tolerance such as $\epsilon \cdot \Delta$ can provide a more consistent convergence criterion across different trust region sizes. This avoids over- or under-solving depending on the scale of $\Delta$.
 
+\subsection{KKT Check}
+\begin{table}[h!]
+\centering
+\begin{tabular}{cccc}
+\hline
+\textbf{Problem ID} & \(\|\mathbf{x}^\ast\|\) & \textbf{grad\_norm} & \textbf{feasible} \\
+\hline
+0 & 1.8358 & 5.2542  & True  \\
+1 & 0.5519 & 2.5795  & True  \\
+2 & 0.4667 & 2.1833  & True  \\
+3 & 1.5166 & 4.3180  & True  \\
+4 & 1.0108 & 3.5642  & True  \\
+5 & 1.1811 & 2.7257  & True  \\
+6 & 0.8086 & 3.7895  & True  \\
+7 & 0.5897 & 3.0202  & True  \\
+8 & 0.7044 & 3.0115  & True  \\
+\hline
+\end{tabular}
+\caption{KKT Check Summary}
+\end{table}
+We generated test problems in multiple dimensions and performed KKT condition checks on each output solution. Our numerical experimental results show that the implemented Algorithm 12 can (1) correctly handle feasibility and boundary judgment in all test problems, (2) can stably converge under different types of Q (positive definite, indefinite), and (3) the output solution generally satisfies the KKT condition and has good numerical accuracy. Therefore, we believe that the implementation is correct and can effectively solve quadratic optimization problems under norm constraints.
+
+\subsection{Benchmark}
+
+\begin{figure}[h]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=1.25\textwidth]{pics/h6/6.png}}
+    \caption{Benchmark}
+    \label{fig:6}
+\end{figure}
+\FloatBarrier
+For fixed $\Delta=1.0$ and indefinite $Q$, iteration count grows slowly with $n$, confirming the dimension-agnostic nature of bisection. Runtime increases with $n$ due to matrix factorization in each iteration. However, for $n=50$, the solve time remained acceptable (milliseconds). A stricter tolerance ($\epsilon=10^{-6}$) increased iteration count by 2--5 steps compared to $\epsilon=10^{-4}$. The difference was more pronounced when the solution lay near the boundary.
+
+\subsection{Experimental Shortcomings}
+
+\textbf{Near-Singular Cases:} If $Q+ \lambda I$ becomes nearly singular for small $\lambda$, we might see numerical instability. In practice, we observed a few LinAlgError expansions but no major breakdown.\\
+\textbf{Random Data:} Our indefinite or negative definite matrices are artificially generated, which may differ from real-world data (where structures like sparsity or specific eigenvalue distributions matter). Future work might test structured or extremely large $n$.
+
+
+
+
 
 \section{Conclusion}
 
 %What knowledge have we gained?
 %Could we answer the question we set out to answer in the Introduction?
 
-
+Through extensive experiments and theoretical analysis, we have demonstrated that Algorithm 12 effectively solves the trust-region subproblem across a wide range of conditions. The algorithm reliably produces solutions that satisfy both the norm constraint and the KKT optimality conditions, with feasibility errors and residuals consistently near machine precision. The method exhibits robust and predictable performance, with iteration counts and runtimes scaling moderately with problem size. The bisection approach used for adjusting the Lagrange multiplier $\lambda$ achieves linear convergence and ensures numerical stability even when the problem is indefinite. Overall, Algorithm 12 is a reliable and efficient method for norm-constrained quadratic optimization in low to moderate dimensions.
 \end{document}
