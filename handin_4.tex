@@ -83,7 +83,7 @@ where
   \quad
   y_k = \nabla f(x_{k+1}) - \nabla f(x_k).
 \]
-Unlike BFGS, SR1 does not guarantee positive definiteness. Below, we see how it can become indefinite.
+Unlike BFGS, SR1 does not guarantee positive definiteness.
 
 \subsubsection*{When SR1 is Indefinite}
 If $(\,y_k - B_k\,s_k\,)^\top s_k < 0,$ the scalar in the denominator is negative, and
